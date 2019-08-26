@@ -1,0 +1,40 @@
+service: coders-glory
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  profile: coders-glory
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'ap-south-1'}
+  environment:
+    codeBuildName: coders-glory-code-build-test
+    emailAddress: keshavkumaresan1002@gmail.com
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "codebuild:StartBuild"
+        - "codecommit:GetPullRequest"
+        - "s3:GetObject"
+        - "s3:PutObject"
+        - "ses:*"
+      Resource: "*"
+
+functions:
+  triggerCodeBuild:
+    handler: handler.triggerCodeBuild
+    events:
+      - sns: coders-glory-build-trigger
+
+  emailReport:
+    handler: handler.emailReport
+    events:
+      - s3:
+          bucket: coders-glory-result-pdf-bucket
+          event: s3:ObjectCreated:Put
+
+plugins:
+  - serverless-offline
+
+package:
+  exclude:
+    - node_modules/serverless-offline/**

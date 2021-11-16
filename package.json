@@ -9,7 +9,7 @@
   "author": "Keshav Kumaresan",
   "license": "MIT",
   "devDependencies": {
-    "aws-sdk": "^2.517.0",
+    "aws-sdk": "^2.814.0",
     "serverless-offline": "^5.10.1"
   },
   "dependencies": {
